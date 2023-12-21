@@ -4,3 +4,8 @@ target
 *.pdb
 
 .vscode
+
+
+# Added by cargo
+
+/target
