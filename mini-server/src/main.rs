@@ -6,20 +6,20 @@ use std::{
     time::Duration,
 };
 
+use mini_server::ThreadPool;
+
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+    let pool = ThreadPool::new(4);
 
     println!("Server listening at port: 7878");
 
-    for stream in listener.incoming() {
+    for stream in listener.incoming().take(2) {
         let stream = stream.unwrap();
 
-        println!(
-            "Connection established from: {}",
-            stream.peer_addr().unwrap().to_string()
-        );
-
-        handle_connection(stream);
+        pool.execute(|| {
+            handle_connection(stream);
+        });
     }
 }
 
